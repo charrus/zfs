@@ -154,69 +154,42 @@ AC_DEFUN([ZFS_AC_KERNEL_BLKDEV_INVALIDATE_BDEV], [
 ])
 
 dnl #
-dnl # 5.11 API, lookup_bdev() takes dev_t argument.
-dnl # 2.6.27 API, lookup_bdev() was first exported.
-dnl # 4.4.0-6.21 API, lookup_bdev() on Ubuntu takes mode argument.
+dnl # 2.6.27, lookup_bdev() was exported.
+dnl # 4.4.0-6.21 - lookup_bdev() takes 2 arguments.
 dnl #
 AC_DEFUN([ZFS_AC_KERNEL_SRC_BLKDEV_LOOKUP_BDEV], [
-	ZFS_LINUX_TEST_SRC([lookup_bdev_devt], [
-		#include <linux/blkdev.h>
-	], [
-		int error __attribute__ ((unused));
-		const char path[] = "/example/path";
-		dev_t dev;
-
-		error = lookup_bdev(path, &dev);
-	])
-
 	ZFS_LINUX_TEST_SRC([lookup_bdev_1arg], [
 		#include <linux/fs.h>
 		#include <linux/blkdev.h>
 	], [
-		struct block_device *bdev __attribute__ ((unused));
-		const char path[] = "/example/path";
-
-		bdev = lookup_bdev(path);
+		lookup_bdev(NULL);
 	])
 
-	ZFS_LINUX_TEST_SRC([lookup_bdev_mode], [
+	ZFS_LINUX_TEST_SRC([lookup_bdev_2args], [
 		#include <linux/fs.h>
 	], [
-		struct block_device *bdev __attribute__ ((unused));
-		const char path[] = "/example/path";
-
-		bdev = lookup_bdev(path, FMODE_READ);
+		lookup_bdev(NULL, FMODE_READ);
 	])
 ])
 
 AC_DEFUN([ZFS_AC_KERNEL_BLKDEV_LOOKUP_BDEV], [
-	AC_MSG_CHECKING([whether lookup_bdev() wants dev_t arg])
-	ZFS_LINUX_TEST_RESULT_SYMBOL([lookup_bdev_devt],
+	AC_MSG_CHECKING([whether lookup_bdev() wants 1 arg])
+	ZFS_LINUX_TEST_RESULT_SYMBOL([lookup_bdev_1arg],
 	    [lookup_bdev], [fs/block_dev.c], [
 		AC_MSG_RESULT(yes)
-		AC_DEFINE(HAVE_DEVT_LOOKUP_BDEV, 1,
-		    [lookup_bdev() wants dev_t arg])
+		AC_DEFINE(HAVE_1ARG_LOOKUP_BDEV, 1,
+		    [lookup_bdev() wants 1 arg])
 	], [
 		AC_MSG_RESULT(no)
 
-		AC_MSG_CHECKING([whether lookup_bdev() wants 1 arg])
-		ZFS_LINUX_TEST_RESULT_SYMBOL([lookup_bdev_1arg],
+		AC_MSG_CHECKING([whether lookup_bdev() wants 2 args])
+		ZFS_LINUX_TEST_RESULT_SYMBOL([lookup_bdev_2args],
 		    [lookup_bdev], [fs/block_dev.c], [
 			AC_MSG_RESULT(yes)
-			AC_DEFINE(HAVE_1ARG_LOOKUP_BDEV, 1,
-			    [lookup_bdev() wants 1 arg])
+			AC_DEFINE(HAVE_2ARGS_LOOKUP_BDEV, 1,
+			    [lookup_bdev() wants 2 args])
 		], [
-			AC_MSG_RESULT(no)
-
-			AC_MSG_CHECKING([whether lookup_bdev() wants mode arg])
-			ZFS_LINUX_TEST_RESULT_SYMBOL([lookup_bdev_mode],
-			    [lookup_bdev], [fs/block_dev.c], [
-				AC_MSG_RESULT(yes)
-				AC_DEFINE(HAVE_MODE_LOOKUP_BDEV, 1,
-				    [lookup_bdev() wants mode arg])
-			], [
-				ZFS_LINUX_TEST_ERROR([lookup_bdev()])
-			])
+			ZFS_LINUX_TEST_ERROR([lookup_bdev()])
 		])
 	])
 ])
@@ -271,29 +244,6 @@ AC_DEFUN([ZFS_AC_KERNEL_BLKDEV_BDEV_LOGICAL_BLOCK_SIZE], [
 	])
 ])
 
-dnl #
-dnl # 5.11 API change
-dnl # Added bdev_whole() helper.
-dnl #
-AC_DEFUN([ZFS_AC_KERNEL_SRC_BLKDEV_BDEV_WHOLE], [
-	ZFS_LINUX_TEST_SRC([bdev_whole], [
-		#include <linux/blkdev.h>
-	],[
-		struct block_device *bdev = NULL;
-		bdev = bdev_whole(bdev);
-	])
-])
-
-AC_DEFUN([ZFS_AC_KERNEL_BLKDEV_BDEV_WHOLE], [
-	AC_MSG_CHECKING([whether bdev_whole() is available])
-	ZFS_LINUX_TEST_RESULT([bdev_whole], [
-		AC_MSG_RESULT(yes)
-		AC_DEFINE(HAVE_BDEV_WHOLE, 1, [bdev_whole() is available])
-	],[
-		AC_MSG_RESULT(no)
-	])
-])
-
 AC_DEFUN([ZFS_AC_KERNEL_SRC_BLKDEV], [
 	ZFS_AC_KERNEL_SRC_BLKDEV_GET_BY_PATH
 	ZFS_AC_KERNEL_SRC_BLKDEV_PUT
@@ -304,7 +254,6 @@ AC_DEFUN([ZFS_AC_KERNEL_SRC_BLKDEV], [
 	ZFS_AC_KERNEL_SRC_BLKDEV_BDEV_PHYSICAL_BLOCK_SIZE
 	ZFS_AC_KERNEL_SRC_BLKDEV_CHECK_DISK_CHANGE
 	ZFS_AC_KERNEL_SRC_BLKDEV_BDEV_CHECK_MEDIA_CHANGE
-	ZFS_AC_KERNEL_SRC_BLKDEV_BDEV_WHOLE
 ])
 
 AC_DEFUN([ZFS_AC_KERNEL_BLKDEV], [
@@ -317,5 +266,4 @@ AC_DEFUN([ZFS_AC_KERNEL_BLKDEV], [
 	ZFS_AC_KERNEL_BLKDEV_BDEV_PHYSICAL_BLOCK_SIZE
 	ZFS_AC_KERNEL_BLKDEV_CHECK_DISK_CHANGE
 	ZFS_AC_KERNEL_BLKDEV_BDEV_CHECK_MEDIA_CHANGE
-	ZFS_AC_KERNEL_BLKDEV_BDEV_WHOLE
 ])

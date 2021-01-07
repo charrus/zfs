@@ -1,27 +1,27 @@
 AC_DEFUN([ZFS_AC_CONFIG_USER_SYSTEMD], [
 	AC_ARG_ENABLE(systemd,
-		AS_HELP_STRING([--enable-systemd],
+		AC_HELP_STRING([--enable-systemd],
 		[install systemd unit/preset files [[default: yes]]]),
 		[enable_systemd=$enableval],
 		[enable_systemd=check])
 
 	AC_ARG_WITH(systemdunitdir,
-		AS_HELP_STRING([--with-systemdunitdir=DIR],
+		AC_HELP_STRING([--with-systemdunitdir=DIR],
 		[install systemd unit files in dir [[/usr/lib/systemd/system]]]),
 		systemdunitdir=$withval,systemdunitdir=/usr/lib/systemd/system)
 
 	AC_ARG_WITH(systemdpresetdir,
-		AS_HELP_STRING([--with-systemdpresetdir=DIR],
+		AC_HELP_STRING([--with-systemdpresetdir=DIR],
 		[install systemd preset files in dir [[/usr/lib/systemd/system-preset]]]),
 		systemdpresetdir=$withval,systemdpresetdir=/usr/lib/systemd/system-preset)
 
 	AC_ARG_WITH(systemdmodulesloaddir,
-		AS_HELP_STRING([--with-systemdmodulesloaddir=DIR],
+		AC_HELP_STRING([--with-systemdmodulesloaddir=DIR],
 		[install systemd module load files into dir [[/usr/lib/modules-load.d]]]),
 		systemdmodulesloaddir=$withval,systemdmodulesloaddir=/usr/lib/modules-load.d)
 
 	AC_ARG_WITH(systemdgeneratordir,
-		AS_HELP_STRING([--with-systemdgeneratordir=DIR],
+		AC_HELP_STRING([--with-systemdgeneratordir=DIR],
 		[install systemd generators in dir [[/usr/lib/systemd/system-generators]]]),
 		systemdgeneratordir=$withval,systemdgeneratordir=/usr/lib/systemd/system-generators)
 

@@ -421,7 +421,7 @@ int
 zstream_do_redup(int argc, char *argv[])
 {
 	boolean_t verbose = B_FALSE;
-	int c;
+	char c;
 
 	while ((c = getopt(argc, argv, "v")) != -1) {
 		switch (c) {

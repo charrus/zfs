@@ -7595,7 +7595,7 @@ print_removal_status(zpool_handle_t *zhp, pool_removal_stat_t *prs)
 	vdev_name = zpool_vdev_name(g_zfs, zhp,
 	    child[prs->prs_removing_vdev], B_TRUE);
 
-	printf_color(ANSI_BOLD, gettext("remove: "));
+	(void) printf(gettext("remove: "));
 
 	start = prs->prs_start_time;
 	end = prs->prs_end_time;
@@ -8538,6 +8538,16 @@ upgrade_enable_all(zpool_handle_t *zhp, int *countp)
 {
 	int i, ret, count;
 	boolean_t firstff = B_TRUE;
+
+	// On ubuntu, upgrade of bpool is disabled to prevent users to break their
+	// system by upgrading to features not supported by GRUB
+	if (strcmp("bpool", zpool_get_name(zhp)) == 0) {
+		(void) fprintf(stderr, gettext("'zpool upgrade' is disabled for"
+		    " 'bpool' to keep compatibility with GRUB.\n"
+		    "Skipping upgrade.\n"));
+		return (0);
+	}
+
 	nvlist_t *enabled = zpool_get_features(zhp);
 
 	count = 0;
@@ -10062,7 +10072,7 @@ int
 zpool_do_wait(int argc, char **argv)
 {
 	boolean_t verbose = B_FALSE;
-	int c;
+	char c;
 	char *value;
 	int i;
 	unsigned long count;

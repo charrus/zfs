@@ -1451,7 +1451,7 @@ int
 zfs_domount(struct super_block *sb, zfs_mnt_t *zm, int silent)
 {
 	const char *osname = zm->mnt_osname;
-	struct inode *root_inode = NULL;
+	struct inode *root_inode;
 	uint64_t recordsize;
 	int error = 0;
 	zfsvfs_t *zfsvfs = NULL;

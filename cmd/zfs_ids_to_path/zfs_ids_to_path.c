@@ -44,7 +44,7 @@ int
 main(int argc, char **argv)
 {
 	boolean_t verbose = B_FALSE;
-	int c;
+	char c;
 	while ((c = getopt(argc, argv, "v")) != -1) {
 		switch (c) {
 		case 'v':

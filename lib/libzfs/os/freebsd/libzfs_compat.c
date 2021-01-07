@@ -178,7 +178,7 @@ execvpe(const char *name, char * const argv[], char * const envp[])
 
 #define	ERRBUFLEN 256
 
-static __thread char errbuf[ERRBUFLEN];
+__thread static char errbuf[ERRBUFLEN];
 
 const char *
 libzfs_error_init(int error)

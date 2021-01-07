@@ -7,7 +7,7 @@ dnl # set the PYTHON environment variable accordingly.
 dnl #
 AC_DEFUN([ZFS_AC_CONFIG_ALWAYS_PYTHON], [
 	AC_ARG_WITH([python],
-		AS_HELP_STRING([--with-python[=VERSION]],
+		AC_HELP_STRING([--with-python[=VERSION]],
 		[default system python version @<:@default=check@:>@]),
 		[with_python=$withval],
 		[with_python=check])

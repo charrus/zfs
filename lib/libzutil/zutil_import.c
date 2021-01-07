@@ -1539,7 +1539,7 @@ zpool_find_config(void *hdl, const char *target, nvlist_t **configp,
 	nvlist_t *pools;
 	nvlist_t *match = NULL;
 	nvlist_t *config = NULL;
-	char *sepp = NULL;
+	char *name = NULL, *sepp = NULL;
 	char sep = '\0';
 	int count = 0;
 	char *targetdup = strdup(target);
@@ -1563,11 +1563,11 @@ zpool_find_config(void *hdl, const char *target, nvlist_t **configp,
 					/* multiple matches found */
 					continue;
 				} else {
-					match = fnvlist_dup(config);
+					match = config;
+					name = nvpair_name(elem);
 				}
 			}
 		}
-		fnvlist_free(pools);
 	}
 
 	if (count == 0) {
@@ -1577,7 +1577,6 @@ zpool_find_config(void *hdl, const char *target, nvlist_t **configp,
 
 	if (count > 1) {
 		free(targetdup);
-		fnvlist_free(match);
 		return (EINVAL);
 	}
 
